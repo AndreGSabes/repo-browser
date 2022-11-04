@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaGithub, FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa";
 import { Container, Form, SubmitButton, List, DeleteButton } from "./styles";
 
@@ -9,9 +9,19 @@ export default function Main() {
   const [repositories, setRepositories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const SubmitButtonIcon = isLoading ? FaSpinner : FaPlus;
+  const [alert, setAlert] = useState(null);
+
+  useEffect(() => {
+    const repoStorage = window.localStorage.getItem("repos");
+
+    if (repoStorage) {
+      setRepositories(JSON.parse(repoStorage));
+    }
+  }, []);
 
   function handleInputChange(e) {
     setNewRepo(e.target.value);
+    setAlert(null);
   }
 
   const handleSubmit = useCallback(
@@ -20,16 +30,33 @@ export default function Main() {
 
       async function submit() {
         setIsLoading(true);
+        setAlert(false);
 
         try {
+          if (newRepo === "") {
+            throw new Error("Repository name is required");
+          }
+
           const response = await api.get(`repos/${newRepo}`);
+
+          const hasRepo = repositories.find((r) => r.name === newRepo);
+
+          if (hasRepo) {
+            throw new Error("Repository already exists: " + newRepo);
+          }
+
           const data = {
             name: response.data.full_name,
           };
 
           setRepositories([...repositories, data]);
+          window.localStorage.setItem(
+            "repos",
+            JSON.stringify([...repositories, data] || [])
+          );
           setNewRepo("");
         } catch (error) {
+          setAlert(true);
           console.error(error);
         } finally {
           setIsLoading(false);
@@ -46,6 +73,10 @@ export default function Main() {
       const filterRepoList = repositories.filter((r) => r.name !== repo);
 
       setRepositories(filterRepoList);
+      window.localStorage.setItem(
+        "repos",
+        JSON.stringify(filterRepoList || [])
+      );
     },
     [repositories]
   );
@@ -57,7 +88,7 @@ export default function Main() {
         Meus Repositorios
       </h1>
 
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} error={alert}>
         <input
           type="text"
           placeholder="Adicionar repositorios"
