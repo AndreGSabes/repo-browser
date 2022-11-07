@@ -3,13 +3,15 @@ import { FaGithub, FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa";
 import { Container, Form, SubmitButton, List, DeleteButton } from "./styles";
 
 import api from "../../services/api";
+import { Link } from "react-router-dom";
 
 export default function Main() {
   const [newRepo, setNewRepo] = useState("");
   const [repositories, setRepositories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const SubmitButtonIcon = isLoading ? FaSpinner : FaPlus;
   const [alert, setAlert] = useState(null);
+
+  const SubmitButtonIcon = isLoading ? FaSpinner : FaPlus;
 
   useEffect(() => {
     const repoStorage = window.localStorage.getItem("repos");
@@ -110,9 +112,9 @@ export default function Main() {
               </DeleteButton>
               {repo.name}
             </span>
-            <a href="https://github.com/">
+            <Link to={`/repositorio/${encodeURIComponent(repo.name)}`}>
               <FaBars size={20} />
-            </a>
+            </Link>
           </li>
         ))}
       </List>
