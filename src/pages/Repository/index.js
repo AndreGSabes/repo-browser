@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container } from "./styles";
+import { FaArrowLeft } from "react-icons/fa";
+import { Loading, Container, Owner, BackButton } from "./styles";
 
 import api from "../../services/api";
 
@@ -30,7 +31,25 @@ export default function Repository() {
     loadRepo();
   }, []);
 
-  if (isLoading) return <h1>Loading...</h1>;
+  if (isLoading)
+    return (
+      <Loading>
+        <h1>Loading...</h1>
+      </Loading>
+    );
 
-  return <Container>{repository}</Container>;
+  return (
+    <Container>
+      <BackButton to="/">
+        <FaArrowLeft color="#000" size={30} />
+      </BackButton>
+
+      <Owner>
+        <img src={repoData.owner.avatar_url} alt={repoData.owner.login} />
+
+        <h1>{repoData.name}</h1>
+        <p>{repoData.description}</p>
+      </Owner>
+    </Container>
+  );
 }
