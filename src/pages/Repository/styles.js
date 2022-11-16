@@ -48,3 +48,54 @@ export const Owner = styled.header`
     max-width: 400px;
   }
 `;
+
+export const Title = styled.h2`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 20px 0 20px 0;
+  font-size: 1.5rem;
+`;
+
+export const Issues = styled.ul`
+  list-style: none;
+  margin-top: 20px;
+
+  li {
+    padding: 15px 0;
+    display: flex;
+    flex-direction: column;
+
+    & + li {
+      border-top: 1px solid #eee;
+    }
+
+    a {
+      margin-top: 5px;
+      color: #0d2636;
+      text-decoration: none;
+    }
+  }
+`;
+
+export const IssueTitle = styled.h4`
+  display: flex;
+  margin: 0;
+  color: #0d2636;
+  flex-wrap: nowrap;
+`;
+
+export const IssueLabel = styled.div`
+  display: flex;
+  border: 2px solid #${(props) => props.color};
+  border-radius: 8px;
+  margin: 0 16px 0 16px;
+  padding-left: 8px;
+  align-items: center;
+`;
+
+export const LabelText = styled.p`
+  font-size: 0.75rem;
+  padding-right: 8px;
+  font-weight: normal;
+`;

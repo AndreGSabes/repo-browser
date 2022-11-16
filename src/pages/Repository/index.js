@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
-import { Loading, Container, Owner, BackButton } from "./styles";
+import {
+  Loading,
+  Container,
+  Owner,
+  BackButton,
+  Issues,
+  Title,
+  IssueTitle,
+  IssueLabel,
+  LabelText,
+} from "./styles";
 
 import api from "../../services/api";
 
@@ -50,6 +60,29 @@ export default function Repository() {
         <h1>{repoData.name}</h1>
         <p>{repoData.description}</p>
       </Owner>
+
+      <Issues>
+        <Title>Ongoing issues</Title>
+
+        {repoIssues.map((issue) => (
+          <li key={issue.id}>
+            <IssueTitle>
+              #{issue.number} - {issue.title}
+            </IssueTitle>
+
+            <div style={{ display: "flex" }}>
+              {issue.labels.map((label) => (
+                <IssueLabel color={label.color}>
+                  <LabelText>{label.name}</LabelText>
+                </IssueLabel>
+              ))}
+            </div>
+            <a href={`https://github.com/${repository}/issues/${issue.number}`}>
+              {`https://github.com/${repository}/issues/${issue.number}`}
+            </a>
+          </li>
+        ))}
+      </Issues>
     </Container>
   );
 }
