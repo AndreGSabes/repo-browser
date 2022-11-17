@@ -11,6 +11,7 @@ import {
   IssueTitle,
   IssueLabel,
   LabelText,
+  PageActions,
 } from "./styles";
 
 import api from "../../services/api";
@@ -20,6 +21,10 @@ export default function Repository() {
   const [repoData, setRepoData] = useState({});
   const [repoIssues, setRepoIssues] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [openIssues, setOpenIssues] = useState(0);
+  const per_page = 5;
+  const lastPage = openIssues / per_page;
 
   useEffect(() => {
     async function loadRepo() {
@@ -28,18 +33,41 @@ export default function Repository() {
         api.get(`/repos/${repository}/issues`, {
           params: {
             state: "open",
-            per_page: 5,
+            per_page,
           },
         }),
       ]);
 
       setRepoData(repositoryData.data);
       setRepoIssues(repositoryIssues.data);
+      setOpenIssues(repositoryData.data.open_issues);
 
       setIsLoading(false);
     }
     loadRepo();
   }, []);
+
+  useEffect(() => {
+    async function loadIssues() {
+      const response = await api.get(`/repos/${repository}/issues`, {
+        params: {
+          state: "open",
+          page,
+          per_page,
+        },
+      });
+
+      setRepoIssues(response.data);
+    }
+
+    loadIssues();
+  }, [page]);
+
+  function handlePage(action) {
+    setPage(action === "previous" ? page - 1 : page + 1);
+  }
+
+  console.log(repoData);
 
   if (isLoading)
     return (
@@ -66,14 +94,14 @@ export default function Repository() {
 
         {repoIssues.map((issue) => (
           <li key={issue.id}>
-            <div style={{ display: "flex", marginBottom: "16px" }}>
-              <IssueTitle>
+            <div>
+              <h4>
                 #{issue.number} - {issue.title}
-              </IssueTitle>
+              </h4>
 
               {issue.labels.map((label, index) => (
                 <IssueLabel key={index} color={label.color}>
-                  <LabelText>{label.name}</LabelText>
+                  <p>{label.name}</p>
                 </IssueLabel>
               ))}
             </div>
@@ -83,6 +111,23 @@ export default function Repository() {
           </li>
         ))}
       </Issues>
+
+      <PageActions>
+        <button
+          type="button"
+          onClick={() => handlePage("previous")}
+          disabled={page < 2}
+        >
+          Voltar
+        </button>
+        <button
+          type="button"
+          onClick={() => handlePage("next")}
+          disabled={page + 1 > lastPage}
+        >
+          Proxima
+        </button>
+      </PageActions>
     </Container>
   );
 }

@@ -70,19 +70,29 @@ export const Issues = styled.ul`
       border-top: 1px solid #eee;
     }
 
+    div {
+      display: flex;
+      margin-bottom: 16px;
+    }
+
     a {
       margin-top: 5px;
       color: #0d2636;
       text-decoration: none;
     }
-  }
-`;
 
-export const IssueTitle = styled.h4`
-  display: flex;
-  margin: 0;
-  color: #0d2636;
-  flex-wrap: nowrap;
+    h4 {
+      margin: 0;
+      color: #0d2636;
+      flex-wrap: nowrap;
+    }
+
+    p {
+      font-size: 0.75rem;
+      padding-right: 8px;
+      word-break: break-word;
+    }
+  }
 `;
 
 export const IssueLabel = styled.div`
@@ -95,8 +105,22 @@ export const IssueLabel = styled.div`
   align-items: center;
 `;
 
-export const LabelText = styled.p`
-  font-size: 0.75rem;
-  padding-right: 8px;
-  word-break: break-word;
+export const PageActions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  button {
+    outline: 0;
+    border: 0;
+    background-color: #0d263680;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 6px;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
 `;
