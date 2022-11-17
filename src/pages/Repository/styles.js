@@ -77,8 +77,7 @@ export const Issues = styled.ul`
 
     a {
       margin-top: 5px;
-      color: #0d2636;
-      text-decoration: none;
+      color: #00008b80;
     }
 
     h4 {
@@ -109,11 +108,33 @@ export const PageActions = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 16px;
 
   button {
     outline: 0;
     border: 0;
-    background-color: #0d263680;
+    background-color: #0d263660;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 6px;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+`;
+
+export const Filters = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+
+  button {
+    outline: 0;
+    border: 0;
+    background-color: #0d263660;
     color: #ffffff;
     padding: 5px 10px;
     border-radius: 6px;

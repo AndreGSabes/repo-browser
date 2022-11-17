@@ -8,10 +8,9 @@ import {
   BackButton,
   Issues,
   Title,
-  IssueTitle,
   IssueLabel,
-  LabelText,
   PageActions,
+  Filters,
 } from "./styles";
 
 import api from "../../services/api";
@@ -23,6 +22,7 @@ export default function Repository() {
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [openIssues, setOpenIssues] = useState(0);
+  const [issueState, setIssueState] = useState("open");
   const per_page = 5;
   const lastPage = openIssues / per_page;
 
@@ -32,7 +32,7 @@ export default function Repository() {
         api.get(`/repos/${repository}`),
         api.get(`/repos/${repository}/issues`, {
           params: {
-            state: "open",
+            state: issueState,
             per_page,
           },
         }),
@@ -45,13 +45,13 @@ export default function Repository() {
       setIsLoading(false);
     }
     loadRepo();
-  }, []);
+  }, [issueState]);
 
   useEffect(() => {
     async function loadIssues() {
       const response = await api.get(`/repos/${repository}/issues`, {
         params: {
-          state: "open",
+          state: issueState,
           page,
           per_page,
         },
@@ -67,7 +67,9 @@ export default function Repository() {
     setPage(action === "previous" ? page - 1 : page + 1);
   }
 
-  console.log(repoData);
+  function handleFilter(action) {
+    setIssueState(action);
+  }
 
   if (isLoading)
     return (
@@ -89,8 +91,32 @@ export default function Repository() {
         <p>{repoData.description}</p>
       </Owner>
 
+      <Filters>
+        <button
+          type="button"
+          onClick={() => handleFilter("open")}
+          disabled={issueState === "open"}
+        >
+          Open issues
+        </button>
+        <button
+          type="button"
+          onClick={() => handleFilter("closed")}
+          disabled={issueState === "closed"}
+        >
+          Closed issues
+        </button>
+        <button
+          type="button"
+          onClick={() => handleFilter("all")}
+          disabled={issueState === "all"}
+        >
+          All issues
+        </button>
+      </Filters>
+
       <Issues>
-        <Title>Ongoing issues</Title>
+        <Title>Issues</Title>
 
         {repoIssues.map((issue) => (
           <li key={issue.id}>
@@ -105,6 +131,7 @@ export default function Repository() {
                 </IssueLabel>
               ))}
             </div>
+
             <a href={`https://github.com/${repository}/issues/${issue.number}`}>
               {`https://github.com/${repository}/issues/${issue.number}`}
             </a>
@@ -118,14 +145,14 @@ export default function Repository() {
           onClick={() => handlePage("previous")}
           disabled={page < 2}
         >
-          Voltar
+          Back
         </button>
         <button
           type="button"
           onClick={() => handlePage("next")}
           disabled={page + 1 > lastPage}
         >
-          Proxima
+          Next
         </button>
       </PageActions>
     </Container>
