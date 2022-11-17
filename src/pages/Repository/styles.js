@@ -88,6 +88,7 @@ export const IssueTitle = styled.h4`
 export const IssueLabel = styled.div`
   display: flex;
   border: 2px solid #${(props) => props.color};
+  background-color: #${(props) => props.color}20; // add opacity of 0.2 only to background color
   border-radius: 8px;
   margin: 0 16px 0 16px;
   padding-left: 8px;
@@ -97,5 +98,5 @@ export const IssueLabel = styled.div`
 export const LabelText = styled.p`
   font-size: 0.75rem;
   padding-right: 8px;
-  font-weight: normal;
+  word-break: break-word;
 `;

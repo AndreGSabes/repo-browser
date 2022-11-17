@@ -66,13 +66,13 @@ export default function Repository() {
 
         {repoIssues.map((issue) => (
           <li key={issue.id}>
-            <IssueTitle>
-              #{issue.number} - {issue.title}
-            </IssueTitle>
+            <div style={{ display: "flex", marginBottom: "16px" }}>
+              <IssueTitle>
+                #{issue.number} - {issue.title}
+              </IssueTitle>
 
-            <div style={{ display: "flex" }}>
-              {issue.labels.map((label) => (
-                <IssueLabel color={label.color}>
+              {issue.labels.map((label, index) => (
+                <IssueLabel key={index} color={label.color}>
                   <LabelText>{label.name}</LabelText>
                 </IssueLabel>
               ))}
